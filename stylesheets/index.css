@@ -105,3 +105,24 @@ body ::-webkit-scrollbar {
     background-color: #ccc;
     border-radius: 3px;
 }
+
+#menu ul{
+    width: 100%;
+    text-a;ign: right;
+}
+
+#menu ul li{
+    display: inline-block;
+    list-style: none;
+    margin: 10px 20px;
+}
+
+a{
+    text-decoration: none;
+    color: grey;
+}
+
+a:hover{
+    color: black;
+    text-decoration: none;
+}

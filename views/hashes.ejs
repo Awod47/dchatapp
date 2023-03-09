@@ -15,23 +15,27 @@
 </head>
 <body>
     <div class="container">
-        <div class="row" style="justify-content: center;">
-            <div class="col-md-6 offest-md-3">
-                <div class="card mt-5">
-                    <div class="card-header">
-                        <h4>Search for channels</h4>
+        <h3 class="mt-5">My channels</h3>
+    
+        <% channels.forEach((channel) => { %>
+            <% if(channel.sender == user.address){ %>
+                <% parsed_item = JSON.parse(channel.item_content) %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <%= parsed_item.content.body %>
+                            </div>
+                            <div class="col-4">
+                                <%= channel.item_hash %>
+                            </div>
+                        </div>
                     </div>
-                    <form action="/channels" method="get">
-                        <div class="card-body">
-                            <label for="">Channel hash</label>
-                            <input type="text" class="form-control" name="channelhash" placeholder="enter the channel hash">
-                        </div>
-                        <div class="card-footer">
-                            <input type="submit" value="Show channels" class="btn btn-primary btn-block">
-                        </div>
-                    </form>
                 </div>
-            </div>
+            <% } %>
+        <% }) %>
+        <div class="alert alert-info mt-4">
+            End of List.   Dont see any channels? create a channel to get started
         </div>
     </div>
 </body>

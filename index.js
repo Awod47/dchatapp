@@ -90,13 +90,13 @@ app.get('/channels', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
     var network_id = 261
     var channel = 'TEST'
 
-    let creator_address = req.query.creatoraddress
+    let channel_hash = req.query.channelhash
 
     let channels = await aleph.posts.get_posts('channels', {'api_server':api_server })
 
     res.render('channels/index', { 
         channels: channels.posts,
-        creator_address: creator_address
+        channel_hash: channel_hash
     })
 })
 
@@ -139,6 +139,19 @@ app.get('/channels/:item_hash/join', connectEnsureLogin.ensureLoggedIn(), async 
 
 })
 
+app.get("/mychannels", connectEnsureLogin.ensureLoggedIn(), async(req, res)=>{
+    var api_server = 'https://api2.aleph.im'
+    var network_id = 261
+    var channel = 'TEST'
+
+    let channels = await aleph.posts.get_posts('channels', {'api_server':api_server })
+
+    res.render('hashes', { 
+        channels: channels.posts, 
+        user: req.user ,
+    })
+})
+
 app.post("/channels", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
     
     var channel_name = req.body.name
@@ -176,7 +189,6 @@ app.post("/channels", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
             channel: channel
         })
 
-        console.log(response)
         res.redirect("/")
     })
 })

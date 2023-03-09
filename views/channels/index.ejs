@@ -18,7 +18,7 @@
         <h3 class="mt-5">Join Channel</h3>
     
         <% channels.forEach((channel) => { %>
-            <% if(channel.sender == creator_address){ %>
+            <% if(channel.item_hash == channel_hash){ %>
                 <% parsed_item = JSON.parse(channel.item_content) %>
                 <div class="card mb-3">
                     <div class="card-body">
@@ -27,11 +27,7 @@
                                 <%= parsed_item.content.body %>
                             </div>
                             <div class="col-4">
-                                <% if (parsed_item.content.type == 'private'){ %>
-                                    <a href="/channels/<%= channel.item_hash %>/join" class="btn btn-primary">Request Access</a>
-                                <% } else{ %>
-                                    <a href="/channels/<%= channel.item_hash %>/join" class="btn btn-primary">Join</a>
-                                <% } %>
+                                <a href="/channels/<%= channel.item_hash %>/join" class="btn btn-primary">Join</a>
                             </div>
                         </div>
                     </div>
@@ -40,7 +36,7 @@
         <% }) %>
         <div class="alert alert-info mt-4">
             End of List. 
-            Couldnt find channel? Check and enter the correct creator address 
+            Couldnt find channel? Check and enter the correct channel hash given by the creator
         </div>
     </div>
 </body>

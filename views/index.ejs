@@ -63,10 +63,12 @@
                         <span class="navbar-brand" href="#">
                             <b>Chat</b>
                         </span>
-                        <form action="/logout">
-                            <input type="submit" value="Logout" class="btn btn-primary">
-                        </form>
-                        
+                        <nav id="menu">
+                            <ul>
+                                <li><a href="/mychannels">My Channels</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                            </ul>
+                        </nav>
                     </nav>
                     <% if(locals.posts){ %>
                     <div id="messages">
