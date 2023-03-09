@@ -16,7 +16,8 @@
 <body>
     <div class="container">
         <h3 class="mt-5">My channels</h3>
-    
+        <br>
+        <br>
         <% channels.forEach((channel) => { %>
             <% if(channel.sender == user.address){ %>
                 <% parsed_item = JSON.parse(channel.item_content) %>
