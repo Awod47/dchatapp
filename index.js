@@ -155,26 +155,12 @@ app.get("/mychannels", connectEnsureLogin.ensureLoggedIn(), async(req, res)=>{
 app.post("/channels", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
     
     var channel_name = req.body.name
-    var channel_type = req.body.type
 
     aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then(async(account) => {
         var api_server = 'https://api2.aleph.im'
         var network_id = 261
         var channel = 'NEW_CHAT'
         var data
-
-        if(channel_type=='private'){
-            data  = {
-                'body': channel_name,
-                'type': channel_type,
-                'approved_addresses': [account.address]
-               }
-        }else{
-            data  = {
-                'body': channel_name,
-                'type': channel_type
-               }
-        }
 
         let response = await aleph.posts.submit(account.address, 'channels', data, {
             api_server: api_server,
@@ -265,19 +251,34 @@ app.post("/login", passport.authenticate('local'), (req, res)=>{
 app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
     var message = req.body.message
     const room = req.params.room
+    // var myfile = req.body.filemessage
 
-    aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then((account)=>{
+    aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then(async(account)=>{
         var api_server = 'https://api2.aleph.im'
         var network_id = 261
         var channel = 'TEST'
 
-        aleph.posts.submit(account.address, 'messages',{'body':message},
-        {
-            ref: room,
-            api_server: api_server,
-            account: account,
-            channel: channel
-        })
+        if(message!= ""){
+            aleph.posts.submit(account.address, 'messages',{'body':message},
+            {
+                ref: room,
+                api_server: api_server,
+                account: account,
+                channel: channel
+            })
+        }
+
+        // if(myfile){
+        //     var msg = aleph.store.submit(account.address, {
+        //         fileobject: myfile,
+        //         account: account,
+        //         storage_engine: 'ipfs',
+        //         channel: channel,
+        //         api_server: api_server
+        //     })
+
+        //     console.log(msg)
+        // }
     })
 })
 
