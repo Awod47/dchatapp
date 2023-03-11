@@ -268,11 +268,8 @@ app.get("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
 
 app.post("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req,res)=>{
     let current_password = req.body.currentpass
-    let new_password = req.body.newpass
-
-    console.log(current_password)
-    console.log(new_password)
-
+    let new_password = req.body.new_password
+    
     req.user.changePassword( current_password, new_password , function(err){
         if(err) {
             if(err.name === 'IncorrectPasswordError'){
