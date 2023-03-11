@@ -239,6 +239,59 @@ app.post("/register", (req, res)=>{
     })
 })
 
+app.get("/myaccount", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
+
+    let username = req.user.username
+    let password = req.user.password
+
+    res.render("account/myAccount", {
+        username: username,
+        password: password
+    })
+
+})
+
+app.post("/changeusername", connectEnsureLogin.ensureLoggedIn(), async(req, res)=>{
+
+    let account_address = req.user.address
+    let new_username = req.body.accountusername
+    await User.updateOne({address: account_address},{username: new_username})
+
+    res.render("account/myAccount", {
+        username: new_username,
+    })
+})
+    
+app.get("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
+    res.render("account/passwordPage")
+})
+
+app.post("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req,res)=>{
+    let current_password = req.body.currentpass
+    let new_password = req.body.newpass
+
+    console.log(current_password)
+    console.log(new_password)
+
+    req.user.changePassword( current_password, new_password , function(err){
+        if(err) {
+            if(err.name === 'IncorrectPasswordError'){
+                 res.json({ success: false, message: 'Incorrect password' }); // Return error
+            }else {
+                res.json({ success: false, message: 'Something went wrong!! Please try again after sometimes.' });
+            }
+        } else {
+            res.render("account/myAccount",{
+                username: req.user.username
+            })
+        }
+    })
+
+   
+
+})
+
+
 app.get("/search", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
     res.render("channels/search")
 })
