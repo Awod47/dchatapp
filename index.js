@@ -162,6 +162,12 @@ app.post("/channels", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
         var channel = 'NEW_CHAT'
         var data
 
+
+        data  = {
+            'body': channel_name,
+            'approved_addresses': [account.address]
+           }
+
         let response = await aleph.posts.submit(account.address, 'channels', data, {
             api_server: api_server,
             account: account,
