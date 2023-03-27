@@ -76,24 +76,31 @@
                         
                             <% posts.reverse().forEach((post) => { %>
                                 <% var parsed_item = JSON.parse(post.item_content) %>
-                            
-                                <div id="message-<%= post.item_hash %>" class="message mb-2 <%= parsed_item.address == user.address? 'me' : '' %>">
-                                    <div class="content-container">
-                                        <div class="content">
-                                            <%= parsed_item.content.body %>
-                                        </div>
-                                        <div class="author">
-                                            <%= parsed_item.address %>
+                                <% if(parsed_item.content.body){ %>
+                                
+                                    <div id="message-<%= post.item_hash %>" class="message mb-2 <%= parsed_item.address == user.address? 'me' : '' %>">
+                                        <div class="content-container">
+                                            <div class="content">
+                                                <%= parsed_item.content.body %>
+                                            </div>
+                                            <div class="author">
+                                                <%= parsed_item.address %>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                <% } %>
                             <% }) %>
                         
                     </div>
                     <div class="chat-box">
-                        <form action="/messages/<%= room %>" method="post" id="message-form">
+                        <form action="/messages/<%= room %>" method="post" id="message-form" enctype="multipart/form-data">
                             <div class="input-group">
                                 <input type="text" name="message" id="message" cols="30" rows="10" class="form-control"/>
+                                <label for="filemessage"> 
+                                    <img id="icon" src="https://image.freepik.com/free-icon/upload-arrow_318-26670.jpg">
+                                </label>
+                                <input type="file" name="filemessage" id="filemessage"/>
                                 <div class="input-group-append">
                                     <input type="submit" value="Post Message" class="btn btn-primary">
                                 </div>
@@ -111,6 +118,8 @@
     </div>
       
     <script type="text/javascript">
+
+        
         $(document).ready(()=>{
 
             function appendMessage(message){
@@ -141,12 +150,35 @@
                 let message = JSON.parse(e.data)
                 appendMessage(message)
             }
+
+
             $('#message-form').submit((e)=>{
                 e.preventDefault();
                 $.post('/messages/<%= room %>',$('#message-form').serialize())
                 $('#message-form input[type=text]').val('')
+                
+                
+                var room = $('#current-room').data('room')
+                const form = document.getElementById("message-form");
+
+                const files = document.getElementById("filemessage");
+                const formData = new FormData();
+                formData.append("name", name.value);
+                for(let i =0; i < files.files.length; i++) {
+                    formData.append("filemessage", files.files[i]);
+                }
+                fetch(`http://localhost:3000/messages/${room}`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                    }
+                })
+                    .then((res) => console.log(res))
+                    .catch((err) => ("Error occured", err));
+
                 $('#message-form input[type=file]').val('')
             })
+
         })
     </script>
 </body>

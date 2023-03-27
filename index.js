@@ -2,7 +2,29 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
+var { PythonShell } = require('python-shell')
+
+var FormData = require('form-data');
+var fs = require('fs-extra')
+
+
+const multer = require('multer')
+const path = require('path')
 const aleph = require('aleph-js')
+
+// const storage = multer.memoryStorage()
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      return cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+      return cb(null, `${file.originalname}`)
+    }
+})
+  
+const upload = multer({ storage: storage })
 
 const expressSession = require('express-session')({
     secret: 'insert secret here',
@@ -10,12 +32,13 @@ const expressSession = require('express-session')({
     saveUninitialized: false
 })
 
+
 import passport from 'passport';
 import passportLocalMongoose from 'passport-local-mongoose';
 import connectEnsureLogin from 'connect-ensure-login';
 
 const app = express();
-const port = 4567;
+const port = 3000;
 
 app.use(express.static(__dirname))
 
@@ -28,7 +51,7 @@ app.use(passport.session())
 
 app.set('view engine', 'ejs')
 
-mongoose.connect('mongodb://localhost/AlephChat')
+mongoose.connect('mongodb://127.0.0.1/AlephChat')
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -274,14 +297,14 @@ app.get("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
 
 app.post("/changepassword", connectEnsureLogin.ensureLoggedIn(), (req,res)=>{
     let current_password = req.body.currentpass
-    let new_password = req.body.new_password
+    let new_password = req.body.newpass
     
     req.user.changePassword( current_password, new_password , function(err){
         if(err) {
             if(err.name === 'IncorrectPasswordError'){
                  res.json({ success: false, message: 'Incorrect password' }); // Return error
             }else {
-                res.json({ success: false, message: 'Something went wrong!! Please try again after sometimes.' });
+                res.json({ success: false, message: err.name });
             }
         } else {
             res.render("account/myAccount",{
@@ -304,17 +327,19 @@ app.post("/login", passport.authenticate('local'), (req, res)=>{
 })
 
 //MESSAGES
-app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
+app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn() , upload.single('filemessage') ,(req, res)=>{
+
+    
     var message = req.body.message
     const room = req.params.room
-    // var myfile = req.body.filemessage
+
 
     aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then(async(account)=>{
         var api_server = 'https://api2.aleph.im'
         var network_id = 261
         var channel = 'TEST'
 
-        if(message!= ""){
+        if(message!= "" && message!= " "){
             aleph.posts.submit(account.address, 'messages',{'body':message},
             {
                 ref: room,
@@ -324,17 +349,70 @@ app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn(), (req, res)=>{
             })
         }
 
-        // if(myfile){
-        //     var msg = aleph.store.submit(account.address, {
-        //         fileobject: myfile,
-        //         account: account,
-        //         storage_engine: 'ipfs',
-        //         channel: channel,
-        //         api_server: api_server
-        //     })
+        if(req.file){
 
-        //     console.log(msg)
-        // }
+            var link;
+            var options = {
+                args:[account.private_key]
+            }
+
+            PythonShell.run('myscript.py', options).then(messages=>{
+                link = ""+messages[0]
+                aleph.posts.submit(account.address, 'messages',{'body':link},
+                {
+                    ref: room,
+                    api_server: api_server,
+                    account: account,
+                    channel: channel
+                })
+            });
+
+            
+
+
+            // const txtFile = './uploads/hanbei.jpg'
+            // // let txtFile = req.file;
+            // let myfile = fs.readFileSync(txtFile,'latin1');
+            
+            // let res = await aleph.store.submit(
+            //     account.address,
+            //     {'fileobject': myfile,
+            //     'account': account,
+            //     'channel': 'TEST',
+            //     'api_server': 'https://api2.aleph.im' // please select an API server accepting files, this one does!
+            //     })
+            
+            // console.log(`https://api2.aleph.im/api/v0/storage/raw/${res.content.item_hash}`)
+                
+
+
+
+
+
+        //     // const form = FormData()
+        //     // form.append('image', img, {
+        //     //     contentType: img.mimetype,
+        //     //     buffer: img.buffer,
+        //     //     filename: `myinage.jpg`,
+        //     // });
+        //     try{
+        //         var msg = await aleph.store.submit(
+        //             account.address,
+        //             {
+        //                 'fileobject': img,
+        //                 'account': account,
+        //                 'storage_engine':'ipfs',
+        //                 'channel': 'TEST',
+        //                 'api_server': api_server
+        //             }
+        //             )
+        //             console.log(msg)
+        //     }catch(err){
+        //         console.log(err)
+        //     }
+
+            
+        }
     })
 })
 
