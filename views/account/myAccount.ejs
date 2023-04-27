@@ -18,14 +18,15 @@
         <br>
         <br>
         <div class="card mb-3">
-            <div class="card-body">
+            <div class="card-body" style="background: black
+            ;">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-8" style="color: white;">
                         Username: 
                     </div>
                     <div>
                         <form action="/changeusername" method="post">
-                            <input type="text" name="accountusername" value="<%= username %>" cols="15" rows="10">
+                            <input type="text" name="accountusername" value="<%= username %>" cols="15" rows="10" style=" background: #202020;color: white;">
                             <input type="submit" name="usernamebtn" class="btn btn-primary" value="Update Username">
                         </form>
                     </div>
@@ -33,12 +34,12 @@
                 <br>
                 <br>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-8"  style="color: white;">
                         Password: 
                     </div>
                     <div>
                         <form action="/changepassword" method="get">
-                            <input type="password" name="accountpassword" cols="15" rows="10" disabled>
+                            <input type="password" name="accountpassword" cols="15" rows="10" style="background: #202020; color: white;" disabled >
                             <input type="submit" name="usernamebtn" class="btn btn-primary" value="Update Password">
                         </form>
                     </div>

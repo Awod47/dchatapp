@@ -51,7 +51,7 @@ app.use(passport.session())
 
 app.set('view engine', 'ejs')
 
-mongoose.connect('mongodb://127.0.0.1/AlephChat')
+mongoose.connect('mongodb://127.0.0.1:27017/AlephChat')
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -74,7 +74,7 @@ passport.deserializeUser(User.deserializeUser())
 // User.create({username: 'Alex', password:'invalid'})
 // User.create({username: 'Jenny', password:'pass123'})
 
-//User.register({ username: "alex123", active: false}, 'password')
+// User.register({ username: "alex123", active: false}, 'password')
 
 app.get('/', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
 
@@ -334,7 +334,7 @@ app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn() , upload.single(
     const room = req.params.room
 
 
-    aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then(async(account)=>{
+    aleph.ethereum.import_account({mnemonics: req.user.mnemonics}).then((account)=>{
         var api_server = 'https://api2.aleph.im'
         var network_id = 261
         var channel = 'TEST'

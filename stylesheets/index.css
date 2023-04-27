@@ -1,12 +1,14 @@
 body {
     overflow-y: hidden;
     -ms-overflow-style: none;
+    background: url('1.jpg');
 }
 body ::-webkit-scrollbar {
     display: none;
 }
 .chat-room {
     height: 100vh;
+    background-image:url(1.jpg);
 }
 .chat-room #messages {
     height: 100%;
@@ -15,9 +17,11 @@ body ::-webkit-scrollbar {
     padding-top: 20px;
 }
 .chat-room .navbar {
+    color: purple;
     border-bottom: 1px solid #eee;
     margin-left: -15px;
     width: calc(100% + 30px);
+    background: white;
 }
 .chat-room .message {
     min-height: 59px;
@@ -28,7 +32,7 @@ body ::-webkit-scrollbar {
 .chat-room .message .content-container .content {
     background-color: #eee;
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 30px;
 }
 .chat-room .message .content-container .author {
     font-size: 0.8rem;
@@ -48,7 +52,7 @@ body ::-webkit-scrollbar {
     padding: 20px;
     width: 100%;
     margin-left: -15px;
-    background-color: white;
+    background-color: black;
     border-top: 1px solid #eee;
 }
 .chat-room .chat-box input[type=text] {
@@ -108,7 +112,7 @@ body ::-webkit-scrollbar {
 
 #menu ul{
     width: 100%;
-    text-a;ign: right;
+    text-align: right;
 }
 
 #menu ul li{
@@ -119,11 +123,11 @@ body ::-webkit-scrollbar {
 
 a{
     text-decoration: none;
-    color: grey;
+    color: white;
 }
 
 a:hover{
-    color: black;
+    color: grey;
     text-decoration: none;
 }
 
@@ -136,4 +140,51 @@ a:hover{
     margin-right: 20px;
     width: 40px;
     cursor: pointer;
+}
+
+#messages{
+    background-image:url("1.jpg")
+}
+
+#navbar-option{
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+#navbar-option:hover{
+    background-color: grey;
+}
+
+#username-card{
+    background: black;
+    color: white;
+}
+
+#join-create{
+    background: black;
+    shadow: 2px 2px #202020;
+}
+
+#chat-navbar{
+    background: black;
+}
+
+#message{
+    background: #202020;
+    font-color: white;
+}
+
+#form-card{
+    background: black;
+    color: white;
+}
+
+.form-control{
+    background: #202020;
+    color: white;
+}
+.form-control:focus{
+    background: #202020;
+    color: white;
 }

@@ -15,14 +15,14 @@
 </head>
 <body>
     <div class="container">
-        <h3 class="mt-5">My channels</h3>
+        <h3 class="mt-5" style="color: white;">My channels</h3>
         <br>
         <br>
         <% channels.forEach((channel) => { %>
             <% if(channel.sender == user.address){ %>
                 <% parsed_item = JSON.parse(channel.item_content) %>
                 <div class="card mb-3">
-                    <div class="card-body">
+                    <div class="card-body" style="color: white; background: black;">
                         <div class="row">
                             <div class="col-8">
                                 <%= parsed_item.content.body %>

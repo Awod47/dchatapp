@@ -15,19 +15,19 @@
 </head>
 <body>
     <div class="container">
-        <h3 class="mt-5">Join Channel</h3>
+        <h3 class="mt-5" style="color: white;">Join Channel</h3>
     
         <% channels.forEach((channel) => { %>
             <% if(channel.item_hash == channel_hash){ %>
                 <% parsed_item = JSON.parse(channel.item_content) %>
                 <div class="card mb-3">
-                    <div class="card-body">
+                    <div class="card-body" id="form-card">
                         <div class="row">
                             <div class="col-8">
                                 <%= parsed_item.content.body %>
                             </div>
                             <div class="col-4">
-                                <a href="/channels/<%= channel.item_hash %>/join" class="btn btn-primary">Join</a>
+                                <a href="/channels/<%= channel.item_hash %>/join" class="btn btn-primary" style="float: right;">Join</a>
                             </div>
                         </div>
                     </div>
