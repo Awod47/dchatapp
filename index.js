@@ -51,7 +51,7 @@ app.use(passport.session())
 
 app.set('view engine', 'ejs')
 
-mongoose.connect('mongodb://127.0.0.1:27017/AlephChat')
+mongoose.connect('mongodb://127.0.0.1/AlephChat')
 
 const userSchema = new mongoose.Schema({
     username: String,
