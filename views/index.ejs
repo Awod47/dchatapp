@@ -124,7 +124,7 @@
 
             function appendMessage(message){
                 
-                if(message.content.content.body && isforChannel(message) && isNotOnPage(message)){
+                if(message.content.content.body!=undefined && isforChannel(message) && isNotOnPage(message)){
                     var user_address = $('#current-user').data('address')
                     var template = '<div class="message mb-2 '+ (user_address == message.content.address? "me" : "") +'">\
                                     <div class="content-container">\
@@ -134,6 +134,7 @@
                                     </div>'
                     
                     $('#messages').append(template)
+                    console.log(message)
                 }
                 
             }
@@ -146,10 +147,12 @@
                 return $('#current-room').data('room') == message.content.ref
             }
 
+
             const socket = new WebSocket('wss://api2.aleph.im/api/ws0/messages?msgType=POST&contentTypes=messages')
             socket.onmessage = (e) =>{
                 let message = JSON.parse(e.data)
-                appendMessage(message)
+                console.log(message)
+                appendMessage(message) 
             }
 
 

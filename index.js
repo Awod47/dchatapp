@@ -36,6 +36,7 @@ const expressSession = require('express-session')({
 import passport from 'passport';
 import passportLocalMongoose from 'passport-local-mongoose';
 import connectEnsureLogin from 'connect-ensure-login';
+import { exit } from 'process';
 
 const app = express();
 const port = 3000;
@@ -84,7 +85,8 @@ app.get('/', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
     var channel = 'TEST'
 
     let memberships = await aleph.posts.get_posts('channel_memberships', {'addresses': [req.user.address], 'api_server':api_server})
-
+    
+   
     let channel_refs = memberships.posts.map((membership)=>{
         if(membership.ref){
             return membership.ref
@@ -92,6 +94,13 @@ app.get('/', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
     })
 
     channel_refs = channel_refs.filter(ref => ref != undefined)
+
+    if(channel_refs.length!= 0){
+        channel_refs = channel_refs
+    }
+    else{
+        channel_refs = ['ab389bf26e11ddc84dc5985dfd51f6f455db636acf6c3d1d67eaf9c419b51c44','59b36ecb090ae502f639ede7f7a66ea491ded9a7b003bc4349e1c95ba871ad09']
+    }
 
     let channels = await aleph.posts.get_posts('channels', { 'hashes': channel_refs, 'api_server':api_server })
 
@@ -347,9 +356,10 @@ app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn() , upload.single(
                 account: account,
                 channel: channel
             })
+            
         }
 
-        if(req.file){
+        if(req.file!= undefined){
 
             var link;
             var options = {
@@ -366,51 +376,6 @@ app.post("/messages/:room", connectEnsureLogin.ensureLoggedIn() , upload.single(
                     channel: channel
                 })
             });
-
-            
-
-
-            // const txtFile = './uploads/hanbei.jpg'
-            // // let txtFile = req.file;
-            // let myfile = fs.readFileSync(txtFile,'latin1');
-            
-            // let res = await aleph.store.submit(
-            //     account.address,
-            //     {'fileobject': myfile,
-            //     'account': account,
-            //     'channel': 'TEST',
-            //     'api_server': 'https://api2.aleph.im' // please select an API server accepting files, this one does!
-            //     })
-            
-            // console.log(`https://api2.aleph.im/api/v0/storage/raw/${res.content.item_hash}`)
-                
-
-
-
-
-
-        //     // const form = FormData()
-        //     // form.append('image', img, {
-        //     //     contentType: img.mimetype,
-        //     //     buffer: img.buffer,
-        //     //     filename: `myinage.jpg`,
-        //     // });
-        //     try{
-        //         var msg = await aleph.store.submit(
-        //             account.address,
-        //             {
-        //                 'fileobject': img,
-        //                 'account': account,
-        //                 'storage_engine':'ipfs',
-        //                 'channel': 'TEST',
-        //                 'api_server': api_server
-        //             }
-        //             )
-        //             console.log(msg)
-        //     }catch(err){
-        //         console.log(err)
-        //     }
-
             
         }
     })
