@@ -122,6 +122,10 @@
         
         $(document).ready(()=>{
 
+            const nestedElement = document.getElementById('messages')
+            nestedElement.scrollTo(0, nestedElement.scrollHeight);
+
+
             function appendMessage(message){
                 
                 if(message.content.content.body!=undefined && isforChannel(message) && isNotOnPage(message)){
@@ -134,6 +138,7 @@
                                     </div>'
                     
                     $('#messages').append(template)
+                    window.location.reload()
                     console.log(message)
                 }
                 
@@ -160,6 +165,7 @@
                 e.preventDefault();
                 $.post('/messages/<%= room %>',$('#message-form').serialize())
                 $('#message-form input[type=text]').val('')
+                window.location.reload();
                 
                 
                 var room = $('#current-room').data('room')
